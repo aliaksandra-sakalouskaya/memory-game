@@ -10,3 +10,45 @@ body {
     font-weight: 400;
     font-style: normal;
 }
+
+.memory-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.cards {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    list-style: none;
+
+    max-width: 940px;
+    width: 100%;
+    padding: 0 20px;
+
+    gap: 20px;
+}
+
+li {
+    width: calc((100% - 20px * 3) / 4);
+    text-align: center;
+}
+
+
+img {
+    width: 140px;
+    height: 140px;
+}
+
+button {
+    border: none;
+    background-color: #525faab3;
+    border-radius: 20px;
+    padding: 14px;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+}
