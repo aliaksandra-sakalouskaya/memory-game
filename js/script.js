@@ -1,23 +1,47 @@
 'use strict';
 
 const body = document.body;
+const header = document.createElement('header');
 const section = document.createElement('section');
+const newGameBtn = document.createElement('button');
+const leaderboardBtn = document.createElement('button');
 const cardList = document.createElement('ul');
 const counts = document.createElement('div');
 const movesCounterEl = document.createElement('span');
 const pairsCounterEl = document.createElement('span');
+const dialog = document.createElement('dialog');
+const dialogContentWrapper = document.createElement('div');
+const dialogButtonWrapper = document.createElement('div');
+const closeDialogBtn = document.createElement('button');
 
 const renderElements = function() {
+    dialogContentWrapper.classList.add('content-wrapper');
+    dialogButtonWrapper.classList.add('buttons-wrapper');
     section.classList.add('memory-game');
     cardList.classList.add('cards');
     movesCounterEl.classList.add('moves-counter');
     pairsCounterEl.classList.add('pairs-counter');
     counts.classList.add('counts');
+
+    closeDialogBtn.setAttribute('type', 'button');
+    newGameBtn.setAttribute('type', 'button');
+    leaderboardBtn.setAttribute('type', 'button');
+
+    closeDialogBtn.textContent = "Close";
+    newGameBtn.textContent = "New Game";
+    leaderboardBtn.textContent = "Leaderboard";
+
+    body.prepend(section);
+    body.prepend(dialog);
+    body.prepend(header);
+    header.appendChild(newGameBtn);
+    header.appendChild(leaderboardBtn);
     counts.append(movesCounterEl);
     counts.append(pairsCounterEl);
     section.appendChild(cardList);
-    body.prepend(section);
     section.prepend(counts);
+    dialog.append(dialogContentWrapper);
+    dialog.append(dialogButtonWrapper);
 }
 
 const images = [
@@ -153,7 +177,10 @@ function compareCards() {
         state.pairsCounter++;
         renderCounts();
         if (state.pairsCounter === 8) {
-            console.log('You win!');
+            showDialog(`Congratulations, you won in ${state.movesCounter} moves.`);
+            const cloneNewGameBtn = newGameBtn.cloneNode(true);
+            cloneNewGameBtn.addEventListener('click',  startNewGame);
+            dialogButtonWrapper.prepend(cloneNewGameBtn);
         }
         state.openedCards = [];
     } else {
@@ -167,6 +194,38 @@ function compareCards() {
     }
 }
 
+function showDialog(content) {
+    dialogContentWrapper.textContent = '';
+    dialogButtonWrapper.textContent = '';
+    dialogContentWrapper.append(content);
+    dialogButtonWrapper.append(closeDialogBtn);
+    dialog.showModal();
+}
+
+function startNewGame() {
+    clearTimeout(state.timerId);
+    state.timerId = null;
+    state.cards = makeCards();
+    state.movesCounter = 0;
+    state.pairsCounter = 0;
+    state.openedCards = [];
+    renderCards();
+    renderCounts();
+    dialog.close();
+}
+
 renderElements();
 renderCards();
 renderCounts();
+
+newGameBtn.addEventListener('click', function() {
+    startNewGame();
+});
+
+closeDialogBtn.addEventListener('click', function() {
+    dialog.close();
+});
+
+dialog.addEventListener('click', function(e) {
+    if (e.target === dialog) dialog.close();
+});
