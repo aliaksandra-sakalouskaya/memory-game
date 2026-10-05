@@ -18,6 +18,31 @@ header {
     padding: 20px;
 }
 
+dialog button,
+header button {
+    max-width: 200px;
+    background-color: #fe9c5f;
+    font-family: inherit;
+    font-size: 20px;
+    border-radius: 10px;
+    color: #2f4274;
+    cursor: pointer;
+    box-shadow: 0 0 10px #eb692b;
+    transition: all 0.5s ease;
+
+    &:hover {
+        box-shadow: none;
+    }
+}
+
+.buttons-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 0 20px 0;
+}
+
 .memory-game {
     display: flex;
     justify-content: center;
@@ -65,4 +90,51 @@ button {
     width: 100%;
     cursor: pointer;
     outline: none;
+}
+
+dialog {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    border-radius: 20px;
+}
+
+.content-wrapper {
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 20px 20px 0 20px;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    tr {
+        display: flex;
+        border-top: 1px solid #e48d55;
+
+        td:last-of-type,
+        th:last-of-type {
+            border-right: 1px solid #e48d55;
+        }
+    }
+
+    th,
+    td {
+        flex: 1;
+        padding: 5px;
+        border-left: 1px solid #e48d55;
+    }
+
+    tbody {
+        tr:last-of-type {
+            border-bottom: 1px solid #e48d55;
+        }
+    }
+}
+
+body:has(dialog[open]) {
+    overflow: hidden;
 }
