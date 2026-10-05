@@ -11,12 +11,26 @@ body {
     font-style: normal;
 }
 
+header {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+}
+
 .memory-game {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 40px;
+}
+
+.counts {
+    display: flex;
+    gap: 40px;
+    color: #eb692b;
+    font-size: 26px;
 }
 
 .cards {

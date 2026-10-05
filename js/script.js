@@ -1,14 +1,23 @@
 'use strict';
 
 const body = document.body;
-const cardList = document.createElement('ul');
 const section = document.createElement('section');
+const cardList = document.createElement('ul');
+const counts = document.createElement('div');
+const movesCounterEl = document.createElement('span');
+const pairsCounterEl = document.createElement('span');
 
 const renderElements = function() {
     section.classList.add('memory-game');
     cardList.classList.add('cards');
+    movesCounterEl.classList.add('moves-counter');
+    pairsCounterEl.classList.add('pairs-counter');
+    counts.classList.add('counts');
+    counts.append(movesCounterEl);
+    counts.append(pairsCounterEl);
     section.appendChild(cardList);
     body.prepend(section);
+    section.prepend(counts);
 }
 
 const images = [
@@ -110,5 +119,54 @@ function getImgAlt(item) {
     return item.isOpened ? item.alt : 'Unknown image';
 }
 
+function renderCounts() {
+    pairsCounterEl.textContent = `Pairs: ${state.pairsCounter} of 8`;
+    movesCounterEl.textContent = `Moves: ${state.movesCounter}`;
+}
+
+cardList.addEventListener('click', function(e) {
+    if (state.openedCards.length === 2) return;
+
+    const currentCard = e.target.closest('button');
+    if (!currentCard) return;
+
+    state.cards.forEach(function(item) {
+        if (item.id == currentCard.dataset.id && !item.isOpened) {
+            item.isOpened = true;
+            state.openedCards.push(item);
+            if (state.openedCards.length === 2) {
+                state.movesCounter++;
+                renderCounts();
+            }
+            currentCard.querySelector('img').setAttribute('src', getImgPath(item));
+            currentCard.querySelector('img').setAttribute('alt', getImgAlt(item));
+        }
+    });
+
+    if (state.openedCards.length === 2) compareCards();
+});
+
+function compareCards() {
+    if (state.openedCards[0].img === state.openedCards[1].img) {
+        state.openedCards[0].isPaired = true;
+        state.openedCards[1].isPaired = true;
+        state.pairsCounter++;
+        renderCounts();
+        if (state.pairsCounter === 8) {
+            console.log('You win!');
+        }
+        state.openedCards = [];
+    } else {
+        state.timerId = setTimeout(() => {
+            state.openedCards[0].isOpened = false;
+            state.openedCards[1].isOpened = false;
+            renderCards();
+            state.openedCards = [];
+            state.timerId = null;
+        }, 1000);
+    }
+}
+
 renderElements();
 renderCards();
+renderCounts();
